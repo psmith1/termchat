@@ -1,0 +1,10 @@
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkAmpGb1THWbDSQVMiofPh15-teOj_IO8",
+    authDomain: "terminally-ill-8bae6.firebaseapp.com",
+    databaseURL: "https://terminally-ill-8bae6.firebaseio.com",
+    projectId: "terminally-ill-8bae6",
+    storageBucket: "terminally-ill-8bae6.appspot.com",
+    messagingSenderId: "872121545913",
+    appId: "1:872121545913:web:7f66d524c187d90e611768"
+  };
+  
