@@ -50,7 +50,7 @@ const login = () => {
 }
 
 const chatBox = () => {
-    const time = moment(db.collection.created).format('LLL')
+    const time = moment(db.collection.created).format('llll')
     term.green(`> `);
     term.inputField({}, (err, input) => {
         if (input === 'Q') {
