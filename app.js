@@ -2,8 +2,8 @@ const term = require('terminal-kit').terminal;
 const fs = require('fs');
 const firebase = require("firebase");
 require("firebase/firestore");
+const moment = require('moment');
 
-// Initialize Cloud Firestore through Firebase
 firebase.initializeApp({
     apiKey: "AIzaSyDkAmpGb1THWbDSQVMiofPh15-teOj_IO8",
     authDomain: "terminally-ill-8bae6.firebaseapp.com",
@@ -20,9 +20,9 @@ const logo = `
 
 ████████ ███████ ██████  ███    ███ ████████  █████  ██      ██   ██ 
    ██    ██      ██   ██ ████  ████    ██    ██   ██ ██      ██  ██  
-   ██    █████   ██████  ██ ████ ██    ██    ███████ ██      █████   
-   ██    ██      ██   ██ ██  ██  ██    ██    ██   ██ ██      ██  ██  
-   ██    ███████ ██   ██ ██      ██    ██    ██   ██ ███████ ██   ██               
+   ██    █████   ██████  ██ ████ ██    ██    ███████ ██      █████  
+   ██    ██      ██   ██ ██  ██  ██    ██    ██   ██ ██      ██  ██ 
+   ██    ███████ ██   ██ ██      ██    ██    ██   ██ ███████ ██   ██ 
 `
 
 
@@ -32,40 +32,39 @@ const user = {
     username: '',
 }
 
-
-
 const login = () => {
     term.bgBlack('enter a username \n');
 
     term.inputField({}, (err, input) => {
         if (input === 'Q') {
             process.exit();
-        } 
-        else if (input === 'secret') { 
+        }
+        else if (input === 'secret') {
             term.red('\n congratufuckinglations! You found me.\n')
         }
         user.username = input;
         term.green(`\n Your name is ${user.username} \n`);
-        // printMessages();
         listenForMessages();
         chatBox();
     });
 }
 
 const chatBox = () => {
-    // term.bgBlack('message ->');
+    const time = moment(db.collection.created).format('MMMM Do YYYY, h:mm:ss')
+    term.green(`> `);
     term.inputField({}, (err, input) => {
         if (input === 'Q') {
             process.exit();
         }
-        else if (input === 'secret') { 
+        else if (input === 'secret') {
             term.red('\ncongratufuckinglaions! You found me.')
         }
         else {
             db.collection("messages").add({
                 user: user.username,
                 message: input,
-                created: firebase.firestore.Timestamp.now()
+                created: firebase.firestore.Timestamp.now(),
+                time: time
             })
             .then(function(docRef) {
                 // console.log("Document written with ID: ", docRef.id);
@@ -76,7 +75,6 @@ const chatBox = () => {
             });
         }
         term('\n');
-        // printMessages();
         chatBox();
     });
 
@@ -84,28 +82,21 @@ const chatBox = () => {
 
 term('\n');
 
-const printLastMessage = async () => {
 
-}
 
-const printMessages = async () => {
-    const messages = await db.collection("messages").get();
-    messages.forEach(msg => {
-        const msgData = msg.data();
-        term.red(`${msgData.user} : `);
-        term(`${msgData.message} \n`);
-    });
-}
+
 
 const listenForMessages = () => {
     db.collection('messages').orderBy('created', 'desc').limit(20)
     .onSnapshot(function(snapshot) {
-        const messages = []; 
+        term.clear();
+        const messages = [];
         snapshot.forEach(doc => messages.push(doc.data()))
         messages.reverse().forEach(msg => {
-            term.red(`${msg.user}: `);
+            term.red(`${msg.user} on ${msg.time}: `);
             term(`${msg.message} \n`);
         })
+        term.green(`> `);
     });
 };
 

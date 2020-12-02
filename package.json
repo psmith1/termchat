@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "firebase": "^8.0.2",
+    "moment": "^2.29.1",
     "terminal-kit": "^1.44.0"
   }
 }
